@@ -40,9 +40,19 @@ interface Usuario {
 }
 
 const users: Usuario[] = [
-    {id: 1, auntenticado: false, token: null},
-    {id: 1, auntenticado: false, token: 'ABC'},
-    {id: 1, auntenticado: false, token: 'ABC123'},
+    { id: 1, auntenticado: false, token: null },
+    { id: 1, auntenticado: false, token: 'ABC' },
+    { id: 1, auntenticado: false, token: 'ABC123' },
 ];
 
-// const state$ = from(users).pipe(
+const state$ = from(users).pipe(
+    scan<Usuario>((acc, curr) => {
+        return { ...acc, ...curr };
+    })
+);
+
+const id$ = state$.pipe(
+    map((state) => state.id)
+);
+
+id$.subscribe(console.log);

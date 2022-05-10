@@ -1,5 +1,5 @@
 import { Observer, of, fromEvent, interval, from } from 'rxjs';
-import {  distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs/operators';
+import { distinct, distinctUntilChanged, map, skip, takeUntil, takeWhile, tap } from 'rxjs/operators';
 
 const observer: Observer<any> = {
     next: value => console.log('next: ', value),
@@ -7,6 +7,7 @@ const observer: Observer<any> = {
     complete: () => console.info('completado')
 };
 
+const numeros$ = of(1, 1, 1, 1, 2, 3, 4, 5, 3, 3, 9, 1, 2, 6, 6, 3, 3, 4);
 const personajes$ = from([
     {
         nombre: 'Aldo',
@@ -28,6 +29,10 @@ const personajes$ = from([
         edad: 50
     }]);
 
+numeros$.pipe(
+    distinctUntilChanged()
+).subscribe(observer);
+
 personajes$.pipe(
-    distinctUntilKeyChanged('nombre')
+    distinctUntilChanged((ant, act) => ant.nombre === act.nombre)
 ).subscribe(observer);
